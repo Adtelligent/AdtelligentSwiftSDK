@@ -7,7 +7,7 @@ Binary iOS SDK for integrating Adtelligent In-App Ads into your application.
 ## 📦 Requirements
 
 - iOS 14.0+
-- Xcode 16+
+- Xcode 15.3+
 - Swift 5+
 
 ---
@@ -21,7 +21,7 @@ Binary iOS SDK for integrating Adtelligent In-App Ads into your application.
 3. Enter the repository URL:
 
 ```
-https://github.com/Adtelligent/In_App_Ads_SDK_iOS_Public
+https://github.com/Adtelligent/AdtelligentSwiftSDK
 ```
 
 4. Choose **Up to Next Major Version**
@@ -37,8 +37,8 @@ Add the dependency:
 ```swift
 dependencies: [
     .package(
-        url: "https://github.com/Adtelligent/In_App_Ads_SDK_iOS_Public",
-        from: "0.0.3"
+        url: "https://github.com/Adtelligent/AdtelligentSwiftSDK",
+        from: "0.0.7"
     )
 ]
 ```
@@ -49,7 +49,7 @@ Add the product to your target:
 .target(
     name: "YourApp",
     dependencies: [
-        .product(name: "AdtelligentSwiftSDK", package: "In_App_Ads_SDK_iOS_Public")
+        .product(name: "AdtelligentSwiftSDK", package: "AdtelligentSwiftSDK")
     ]
 )
 ```
