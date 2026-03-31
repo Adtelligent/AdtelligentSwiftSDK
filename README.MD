@@ -38,7 +38,7 @@ Add the dependency:
 dependencies: [
     .package(
         url: "https://github.com/Adtelligent/AdtelligentSwiftSDK",
-        from: "0.0.7"
+        from: "0.0.8"
     )
 ]
 ```
