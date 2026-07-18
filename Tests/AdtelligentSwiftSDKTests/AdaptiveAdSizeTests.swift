@@ -33,9 +33,12 @@ struct AdaptiveAdSizeTests {
         #expect(landscape.height < portrait.height)
     }
 
-    @Test func landscapeAnchoredNeverDropsBelowFloor() {
+    @Test func landscapeAnchoredCompressesTheNarrowAnchorFloor() {
+        // anchoredPortraitHeight never goes below 50 (the narrow IAB anchor), so the smallest
+        // possible landscape value is 50 * 0.7 = 35 -- above the 32pt floor, which exists as a
+        // defensive clamp for constant changes rather than something reachable today.
         let size = AdaptiveAdSize.landscapeAnchored(width: 200)
-        #expect(size.height == 32)
+        #expect(size.height == 35)
     }
 
     // MARK: - Portrait inline
