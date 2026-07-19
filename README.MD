@@ -88,12 +88,15 @@ Configuration          — targeting signals (aid, app info, geo, privacy, video
     └── AdRequest      — bundles a Configuration for a banner/display placement
     └── InterstitialAdRequest — bundles a Configuration for a full-screen placement
 
+AdSize                  — banner size, set once up front (fixed IAB constants or an adaptive
+                           factory); passed to BannerAdController/UIBannerAdView at construction
+
 SwiftUI API
-    BannerAdController — manages request queueing and view lifecycle
+    BannerAdController — takes an AdSize; manages request queueing and view lifecycle
     BannerAdView       — SwiftUI view that hosts the ad WebView
 
 UIKit API
-    UIBannerAdView     — UIView subclass; async/await load
+    UIBannerAdView     — takes an AdSize; UIView subclass; async/await load
 
 Interstitial
     InterstitialAd     — async static factory; presents full-screen view controller
@@ -108,11 +111,13 @@ Interstitial
 ```swift
 let config = Configuration(
     aid: "12345",
-    request: RequestInfo(width: 320, height: 50),
     app: AppInfo(appName: "My App", appBundle: "com.example.myapp"),
     privacy: PrivacyInfo(gdpr: 1, gdprConsent: "<base64 TCString>")
 )
 ```
+
+Ad size is **not** part of `Configuration` — it's set separately via `AdSize` (see
+[Banner Sizing](#banner-sizing-adsize) below).
 
 The SDK auto-populates:
 - `appName`, `appBundle`, `appVersion` — from `Bundle.main`
@@ -126,7 +131,7 @@ Explicitly provided values always take precedence over auto-detected ones.
 
 | Sub-struct | Purpose |
 |---|---|
-| `RequestInfo` | Dimensions, user-agent, cache-buster, CPM floor |
+| `RequestInfo` | User-agent, cache-buster, CPM floor, ad duration |
 | `AppInfo` | App name, bundle ID, Store URL, domain, version |
 | `Identifiers` | IDFA, IDFV, ADID and their hashed variants |
 | `GeoInfo` | Lat/lon, country, city, ZIP, DMA |
@@ -151,13 +156,49 @@ let request = AdRequest(configuration: Configuration(aid: "12345"))
 let request = AdRequest(
     configuration: Configuration(
         aid: "12345",
-        request: RequestInfo(width: 320, height: 50),
         privacy: PrivacyInfo(gdpr: 0)
     )
 )
 ```
 
 Pass the request to `BannerAdController.loadAd(request:)` (SwiftUI) or `UIBannerAdView.loadAd(request:)` (UIKit).
+
+---
+
+## Banner Sizing (`AdSize`)
+
+Banner size is set once, up front, via `AdSize` — not through `Configuration`. Pass it when
+constructing a `BannerAdController` (SwiftUI) or `UIBannerAdView` (UIKit):
+
+```swift
+// Fixed IAB sizes
+AdSize.standardBanner    // 320×50
+AdSize.mediumRectangle   // 300×250
+AdSize.leaderboard       // 728×90
+
+// Arbitrary fixed size
+AdSize(width: 320, height: 50)
+
+// Adaptive — computed from the available width
+AdSize.portraitAnchored(width: 393)
+AdSize.landscapeAnchored(width: 852)
+AdSize.currentOrientationAnchored(width: 393)          // @MainActor
+
+AdSize.portraitInline(width: 393, maxHeight: 250)
+AdSize.landscapeInline(width: 852, maxHeight: 250)
+AdSize.currentOrientationInline(width: 393, maxHeight: 250)   // @MainActor
+```
+
+### Resizing
+
+Call `updateAdSize(_:)` on either type to resize an existing banner. If an ad is already loaded,
+this automatically re-requests it at the new size — no need to build a new `AdRequest` or call
+`loadAd(request:)` again yourself:
+
+```swift
+controller.updateAdSize(.landscapeAnchored(width: newWidth))   // SwiftUI
+bannerView.updateAdSize(.landscapeAnchored(width: newWidth))   // UIKit
+```
 
 ### InterstitialAdRequest — Full-screen
 
@@ -183,7 +224,7 @@ import AdtelligentSwiftSDK
 import SwiftUI
 
 struct ContentView: View {
-    @State private var controller: BannerAdController? = BannerAdController()
+    @State private var controller: BannerAdController? = BannerAdController(adSize: .standardBanner)
 
     var body: some View {
         VStack {
@@ -192,7 +233,6 @@ struct ContentView: View {
                     // Called when the ad closes — update your state here
                     self.controller = nil
                 }
-                .frame(height: 50)
             }
         }
         .onAppear {
@@ -232,7 +272,9 @@ controller.delegate = delegate
 
 ### UIKit
 
-`UIBannerAdView` exposes an `async throws` API. Add it to your view hierarchy, constrain it to the desired size, then call `loadAd(request:)`.
+`UIBannerAdView` exposes an `async throws` API. It sizes itself from `adSize` — constrain its
+leading edge and one vertical edge only, and do **not** add an external width/height constraint,
+then call `loadAd(request:)`.
 
 ```swift
 import AdtelligentSwiftSDK
@@ -240,7 +282,7 @@ import UIKit
 
 class BannerViewController: UIViewController, UIBannerAdViewDelegate {
 
-    private let bannerView = UIBannerAdView()
+    private let bannerView = UIBannerAdView(adSize: .standardBanner)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -251,9 +293,7 @@ class BannerViewController: UIViewController, UIBannerAdViewDelegate {
 
         NSLayoutConstraint.activate([
             bannerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            bannerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bannerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            bannerView.heightAnchor.constraint(equalToConstant: 50)
+            bannerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
         ])
 
         Task {
@@ -277,8 +317,6 @@ class BannerViewController: UIViewController, UIBannerAdViewDelegate {
     func bannerAdView(_ banner: UIBannerAdView, didReceivePlayerError message: String) { }
 }
 ```
-
-**Layout note:** `UIBannerAdView.loadAd(request:)` waits up to 3 seconds for Auto Layout to produce a non-zero frame before sending the request. Ensure the view has valid constraints in place before calling `loadAd`.
 
 ---
 
@@ -455,10 +493,18 @@ Implement `IDFAProvider` to substitute a test double during unit tests or to sup
 ```swift
 class TestIDFAProvider: IDFAProvider {
     var requestPermissionsOnLoad: Bool { false }
+    var canRequestTrackingAuthorization: Bool { false }
+    var trackingAuthorizationStatus: ATTrackingManager.AuthorizationStatus { .authorized }
 
     func isTrackingAccessNotDetermined() -> Bool { false }
+    func isTrackingAccessAvailable() -> Bool { true }
 
-    func requestTrackingAuthorization() async { }
+    func requestTrackingAuthorization(completionHandler: @escaping @Sendable (ATTrackingManager.AuthorizationStatus) -> Void) {
+        completionHandler(.authorized)
+    }
+
+    @discardableResult
+    func requestTrackingAuthorization() async -> ATTrackingManager.AuthorizationStatus { .authorized }
 
     func idfa() -> String? { "00000000-0000-0000-0000-000000000000" }
 }
