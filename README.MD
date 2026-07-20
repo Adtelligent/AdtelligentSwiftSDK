@@ -50,6 +50,19 @@ dependencies: [
 
 ---
 
+## SDK Version
+
+`AdtelligentSDK.version` reports the linked SDK's release version at runtime (e.g. `"0.2.2"`) —
+useful for logging or support requests:
+
+```swift
+import AdtelligentSwiftSDK
+
+print(AdtelligentSDK.version)
+```
+
+---
+
 ## Privacy & Permissions
 
 ### App Transport Security
