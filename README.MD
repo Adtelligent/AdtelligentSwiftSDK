@@ -85,21 +85,29 @@ If your app already has location permission, the SDK appends GPS coordinates to 
 
 ```
 Configuration          — targeting signals (aid, app info, geo, privacy, video, …)
-    └── AdRequest      — bundles a Configuration for a banner/display placement
-    └── InterstitialAdRequest — bundles a Configuration for a full-screen placement
+    └── AdRequest                     — bundles a Configuration for a banner/display placement
+    └── InterstitialAdRequest         — bundles a Configuration for an interstitial placement
+    └── RewardedAdRequest             — bundles a Configuration for a rewarded placement
+    └── RewardedInterstitialAdRequest — bundles a Configuration for a rewarded interstitial placement
 
 AdSize                  — banner size, set once up front (fixed IAB constants or an adaptive
                            factory); passed to BannerAdController/UIBannerAdView at construction
 
 SwiftUI API
-    BannerAdController — takes an AdSize; manages request queueing and view lifecycle
+    BannerAdController — takes an AdSize + showsCloseButton; manages request queueing and view
+                          lifecycle
     BannerAdView       — SwiftUI view that hosts the ad WebView
 
 UIKit API
-    UIBannerAdView     — takes an AdSize; UIView subclass; async/await load
+    UIBannerAdView     — takes an AdSize + showsCloseButton; UIView subclass; async/await load
 
-Interstitial
-    InterstitialAd     — async static factory; presents full-screen view controller
+Full-screen (interstitial / rewarded / rewarded interstitial)
+    InterstitialAd           — async static factory; no reward
+    RewardedAd               — async static factory; grants a reward on completion
+    RewardedInterstitialAd   — async static factory; grants a reward, meant for natural app
+                                transitions (your app supplies its own intro/skip screen)
+    FullScreenAdDelegate     — shared presentation-lifecycle callbacks
+    RewardedAdDelegate       — FullScreenAdDelegate + didEarnReward, used by the two reward formats
 ```
 
 ---
@@ -200,7 +208,7 @@ controller.updateAdSize(.landscapeAnchored(width: newWidth))   // SwiftUI
 bannerView.updateAdSize(.landscapeAnchored(width: newWidth))   // UIKit
 ```
 
-### InterstitialAdRequest — Full-screen
+### InterstitialAdRequest / RewardedAdRequest / RewardedInterstitialAdRequest — Full-screen
 
 ```swift
 let request = InterstitialAdRequest(configuration: Configuration(aid: "12345"))
@@ -209,7 +217,11 @@ let request = InterstitialAdRequest(configuration: Configuration(aid: "12345"))
 try await request.load()
 ```
 
-Screen dimensions are determined automatically from the active key window. Pass the request to `InterstitialAd.load(request:)`.
+`RewardedAdRequest` and `RewardedInterstitialAdRequest` work identically — same `load()`, same
+automatic sizing — see [Full-Screen Ads](#full-screen-ads) below for the reward-specific pieces.
+Screen dimensions are determined automatically from the active key window in all three. Pass the
+request to `InterstitialAd.load(request:)` / `RewardedAd.load(request:reward:)` /
+`RewardedInterstitialAd.load(request:reward:)`.
 
 ---
 
@@ -270,6 +282,17 @@ let delegate = MyAdDelegate()
 controller.delegate = delegate
 ```
 
+#### Close button
+
+Banners show a built-in close button by default. Pass `showsCloseButton: false` to hide it (e.g.
+if you render your own dismiss UI), or toggle it at any time — it's a UI-only change and never
+requires reloading the ad:
+
+```swift
+let controller = BannerAdController(adSize: .standardBanner, showsCloseButton: false)
+controller.showsCloseButton = true   // can be flipped later too
+```
+
 ### UIKit
 
 `UIBannerAdView` exposes an `async throws` API. It sizes itself from `adSize` — constrain its
@@ -318,16 +341,34 @@ class BannerViewController: UIViewController, UIBannerAdViewDelegate {
 }
 ```
 
+`showsCloseButton` works the same way as the SwiftUI controller — pass it at construction or set
+`bannerView.showsCloseButton` at any time:
+
+```swift
+let bannerView = UIBannerAdView(adSize: .standardBanner, showsCloseButton: false)
+```
+
 ---
 
-## Interstitial Ads
+## Full-Screen Ads
+
+Three formats share the same load-then-`present(from:)` pattern and delegate protocols. The ad
+dismisses itself automatically on `Event.close`.
+
+| Type | Reward? | Presented when |
+|---|---|---|
+| `InterstitialAd` | No | Natural app transitions (level end, screen change, …) |
+| `RewardedAd` | Yes | Only after the user explicitly opts in via your own UI (e.g. "Watch an ad to earn 50 coins?") |
+| `RewardedInterstitialAd` | Yes | Natural app transitions — **your app must show its own intro screen with reward messaging and a skip option** before presenting |
+
+### Interstitial
 
 Load the ad in the background and present it at the right moment:
 
 ```swift
 import AdtelligentSwiftSDK
 
-class MyViewController: UIViewController, InterstitialAdDelegate {
+class MyViewController: UIViewController, FullScreenAdDelegate {
 
     private var interstitialAd: InterstitialAd?
 
@@ -348,23 +389,20 @@ class MyViewController: UIViewController, InterstitialAdDelegate {
         interstitialAd?.present(from: self)
     }
 
-    // MARK: InterstitialAdDelegate
+    // MARK: FullScreenAdDelegate
 
-    func interstitialAdDidLoad(_ ad: InterstitialAd) { }
-
-    func interstitialAd(_ ad: InterstitialAd, didFailToLoadWithError error: Error) { }
-
-    func interstitialAd(_ ad: InterstitialAd, didReceiveEvent event: Event, userInfo: [String: Any]?) {
-        if case .close = event {
-            interstitialAd = nil
-        }
+    func adDidDismiss(_ ad: any FullScreenAd) {
+        interstitialAd = nil
     }
 
-    func interstitialAd(_ ad: InterstitialAd, didReceivePlayerError message: String) { }
+    func ad(_ ad: any FullScreenAd, didFailToPresentWithError error: Error) {
+        print("Presentation failed: \(error.localizedDescription)")
+    }
 }
 ```
 
-**`present(from:)`** resolves to the topmost presented view controller automatically. Pass `nil` to use the active key-window root. The interstitial dismisses itself when the ad fires a `close` event.
+**`present(from:)`** resolves to the topmost presented view controller automatically. Pass `nil`
+to use the active key-window root.
 
 You can also pre-fetch the payload separately and pass the request to `InterstitialAd.load`:
 
@@ -375,6 +413,86 @@ try await request.load()   // pre-fetch now
 let ad = try await InterstitialAd.load(request: request)  // reuses cached payload
 ad.present(from: nil)
 ```
+
+### Rewarded
+
+Present only after the user explicitly opts in via your own UI:
+
+```swift
+import AdtelligentSwiftSDK
+
+class MyViewController: UIViewController, RewardedAdDelegate {
+
+    private var rewardedAd: RewardedAd?
+
+    func preloadAd() {
+        Task {
+            do {
+                let request = RewardedAdRequest(configuration: Configuration(aid: "12345"))
+                let ad = try await RewardedAd.load(request: request, reward: Reward(type: "coins", amount: 50))
+                ad.delegate = self
+                self.rewardedAd = ad
+            } catch {
+                print("Rewarded ad failed to load: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    func showAd() {
+        rewardedAd?.present(from: self)
+    }
+
+    // MARK: RewardedAdDelegate
+
+    func ad(_ ad: any FullScreenAd, didEarnReward reward: any Rewardable) {
+        guard let reward = reward as? Reward else { return }
+        grantCurrency(amount: reward.amount)
+    }
+
+    func adDidDismiss(_ ad: any FullScreenAd) {
+        rewardedAd = nil
+    }
+}
+```
+
+`didEarnReward` fires exactly once, when the video plays to completion — not if the user closes
+or skips early, and always before `adDidDismiss` if it fires at all. `Reward` is a ready-made
+`{type, amount}` conformer to `Rewardable`; conform your own type instead if you need something
+richer.
+
+### Rewarded Interstitial
+
+Same loading/presentation API as `RewardedAd`, but meant to be shown automatically at natural app
+transitions rather than after explicit opt-in. **This SDK does not render an intro/consent
+screen** — show your own (reward messaging + a skip option) before calling `present(from:)`:
+
+```swift
+let request = RewardedInterstitialAdRequest(configuration: Configuration(aid: "12345"))
+let ad = try await RewardedInterstitialAd.load(request: request, reward: Reward(type: "coins", amount: 50))
+// ... show your own intro screen, then, if the user doesn't skip:
+ad.delegate = self   // RewardedAdDelegate
+ad.present(from: self)
+```
+
+### FullScreenAdDelegate / RewardedAdDelegate
+
+All three formats share `FullScreenAdDelegate`. `RewardedAd`/`RewardedInterstitialAd` use
+`RewardedAdDelegate`, which adds `didEarnReward` on top. Every method except
+`ad(_:didReceiveEvent:userInfo:)` and `ad(_:didReceivePlayerError:)` has a default no-op
+implementation, so implement only what you need. Load success/failure isn't delivered here — it's
+already covered by the throwing async factory (`try await X.load(request:)`).
+
+| Method | When |
+|---|---|
+| `adWillPresent(_:)` | Immediately before the ad is presented |
+| `adWillDismiss(_:)` | Immediately before the ad is dismissed |
+| `adDidDismiss(_:)` | After dismissal has finished |
+| `adDidRecordImpression(_:)` | An impression is recorded |
+| `adDidRecordClick(_:)` | The user clicks the ad |
+| `ad(_:didFailToPresentWithError:)` | Presentation fails (already presenting, or no suitable view controller available) |
+| `ad(_:didReceiveEvent:userInfo:)` | Any lifecycle event fires — `.close` arrives here as dismissal *begins*, before `adDidDismiss(_:)` |
+| `ad(_:didReceivePlayerError:)` | The video player hits a runtime error |
+| `ad(_:didEarnReward:)` *(RewardedAdDelegate only)* | The reward is earned (video played to completion) |
 
 ---
 
@@ -469,7 +587,9 @@ All throwing methods surface `AdtelligentError`:
 | `.transportError(String)` | URLSession transport error |
 | `.configurationError` | SDK component not wired up correctly |
 | `.serializationFailed` | JSON encode/decode failure |
-| `.interstitialAdNotLoaded` | `present` called before `load` completed |
+| `.unknownError` | No additional context available |
+| `.adAlreadyPresenting` | `present(from:)` called again before the previous presentation was dismissed |
+| `.presenterUnavailable` | No suitable view controller currently available to present from |
 
 ```swift
 do {
