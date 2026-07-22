@@ -7,7 +7,7 @@ Binary iOS SDK for integrating Adtelligent In-App Ads into your application. Sup
 ## Requirements
 
 - iOS 14.5+
-- Xcode 15.3+
+- Xcode 16+
 - Swift 5.9+
 
 ---
@@ -52,7 +52,7 @@ dependencies: [
 
 ## SDK Version
 
-`AdtelligentSDK.version` reports the linked SDK's release version at runtime (e.g. `"0.2.2"`) —
+`AdtelligentSDK.version` reports the linked SDK's release version at runtime (e.g. `"0.3.0"`) —
 useful for logging or support requests:
 
 ```swift
@@ -98,27 +98,35 @@ If your app already has location permission, the SDK appends GPS coordinates to 
 
 ```
 Configuration          — targeting signals (aid, app info, geo, privacy, video, …)
-    └── AdRequest                     — bundles a Configuration for a banner/display placement
-    └── InterstitialAdRequest         — bundles a Configuration for an interstitial placement
-    └── RewardedAdRequest             — bundles a Configuration for a rewarded placement
-    └── RewardedInterstitialAdRequest — bundles a Configuration for a rewarded interstitial placement
+    └── AdRequest                     — bundles a Configuration for any placement (banner,
+                                         interstitial, rewarded, rewarded interstitial); also
+                                         carries PlayerOptions for VAST/outstream video responses
 
-AdSize                  — banner size, set once up front (fixed IAB constants or an adaptive
-                           factory); passed to BannerAdController/UIBannerAdView at construction
+AdSize                  — banner size, set once up front (fixed IAB constants, an adaptive
+                           factory, or .expandable for banners that auto-resize in place up to a
+                           max height as their creative grows); passed to
+                           BannerAdController/UIBannerAdView at construction
+
+PlayerOptions           — configures the VAST/outstream video player (audio, close-button delay,
+                           countdown, viewability threshold, etc.) via AdRequest.playerOptions;
+                           ignored for plain banner responses
 
 SwiftUI API
-    BannerAdController — takes an AdSize + showsCloseButton; manages request queueing and view
-                          lifecycle
+    BannerAdController — takes an AdSize; showsCloseButton defaults true, settable afterward;
+                          manages request queueing and view lifecycle
     BannerAdView       — SwiftUI view that hosts the ad WebView
 
 UIKit API
-    UIBannerAdView     — takes an AdSize + showsCloseButton; UIView subclass; async/await load
+    UIBannerAdView     — takes an AdSize; showsCloseButton defaults true, settable afterward;
+                          UIView subclass; async/await load
 
 Full-screen (interstitial / rewarded / rewarded interstitial)
-    InterstitialAd           — async static factory; no reward
-    RewardedAd               — async static factory; grants a reward on completion
-    RewardedInterstitialAd   — async static factory; grants a reward, meant for natural app
-                                transitions (your app supplies its own intro/skip screen)
+    InterstitialAd           — async static factory taking a plain AdRequest; no reward
+    RewardedAd               — async static factory taking a plain AdRequest + Reward; grants the
+                                reward on completion
+    RewardedInterstitialAd   — async static factory taking a plain AdRequest + Reward; meant for
+                                natural app transitions (your app supplies its own intro/skip
+                                screen)
     FullScreenAdDelegate     — shared presentation-lifecycle callbacks
     RewardedAdDelegate       — FullScreenAdDelegate + didEarnReward, used by the two reward formats
 ```
@@ -221,20 +229,22 @@ controller.updateAdSize(.landscapeAnchored(width: newWidth))   // SwiftUI
 bannerView.updateAdSize(.landscapeAnchored(width: newWidth))   // UIKit
 ```
 
-### InterstitialAdRequest / RewardedAdRequest / RewardedInterstitialAdRequest — Full-screen
+### AdRequest — Full-screen
+
+Full-screen formats take the same `AdRequest` as banners — just pass it to the format's own
+`load(request:...)` factory, which sizes and tags it automatically (screen dimensions come from
+the active key window, no size to specify yourself):
 
 ```swift
-let request = InterstitialAdRequest(configuration: Configuration(aid: "12345"))
-
-// Optional: pre-fetch the ad payload before showing it
-try await request.load()
+let request = AdRequest(configuration: Configuration(aid: "12345"))
+let ad = try await InterstitialAd.load(request: request)   // fully loaded, ready to present
 ```
 
-`RewardedAdRequest` and `RewardedInterstitialAdRequest` work identically — same `load()`, same
-automatic sizing — see [Full-Screen Ads](#full-screen-ads) below for the reward-specific pieces.
-Screen dimensions are determined automatically from the active key window in all three. Pass the
-request to `InterstitialAd.load(request:)` / `RewardedAd.load(request:reward:)` /
-`RewardedInterstitialAd.load(request:reward:)`.
+There's no separate pre-fetch step — `load(request:...)` itself *is* the full load (network fetch
++ player setup). To preload ahead of the moment you actually want to show an ad, call it early and
+hold onto the returned `InterstitialAd`/`RewardedAd`/`RewardedInterstitialAd`; `present(from:)` on
+it later is then instant. See [Full-Screen Ads](#full-screen-ads) below for the reward-specific
+pieces of `RewardedAd.load(request:reward:)` / `RewardedInterstitialAd.load(request:reward:)`.
 
 ---
 
@@ -297,13 +307,13 @@ controller.delegate = delegate
 
 #### Close button
 
-Banners show a built-in close button by default. Pass `showsCloseButton: false` to hide it (e.g.
-if you render your own dismiss UI), or toggle it at any time — it's a UI-only change and never
-requires reloading the ad:
+Banners show a built-in close button by default. Set `showsCloseButton = false` after construction
+to hide it (e.g. if you render your own dismiss UI) — it's a UI-only change and never requires
+reloading the ad, and can be flipped back at any time:
 
 ```swift
-let controller = BannerAdController(adSize: .standardBanner, showsCloseButton: false)
-controller.showsCloseButton = true   // can be flipped later too
+let controller = BannerAdController(adSize: .standardBanner)
+controller.showsCloseButton = false
 ```
 
 ### UIKit
@@ -354,11 +364,12 @@ class BannerViewController: UIViewController, UIBannerAdViewDelegate {
 }
 ```
 
-`showsCloseButton` works the same way as the SwiftUI controller — pass it at construction or set
-`bannerView.showsCloseButton` at any time:
+`showsCloseButton` works the same way as the SwiftUI controller — defaults to `true`, set
+`bannerView.showsCloseButton` at any time to change it:
 
 ```swift
-let bannerView = UIBannerAdView(adSize: .standardBanner, showsCloseButton: false)
+let bannerView = UIBannerAdView(adSize: .standardBanner)
+bannerView.showsCloseButton = false
 ```
 
 ---
@@ -388,7 +399,7 @@ class MyViewController: UIViewController, FullScreenAdDelegate {
     func preloadAd() {
         Task {
             do {
-                let request = InterstitialAdRequest(configuration: Configuration(aid: "12345"))
+                let request = AdRequest(configuration: Configuration(aid: "12345"))
                 let ad = try await InterstitialAd.load(request: request)
                 ad.delegate = self
                 self.interstitialAd = ad
@@ -417,15 +428,9 @@ class MyViewController: UIViewController, FullScreenAdDelegate {
 **`present(from:)`** resolves to the topmost presented view controller automatically. Pass `nil`
 to use the active key-window root.
 
-You can also pre-fetch the payload separately and pass the request to `InterstitialAd.load`:
-
-```swift
-let request = InterstitialAdRequest(configuration: Configuration(aid: "12345"))
-try await request.load()   // pre-fetch now
-// … later …
-let ad = try await InterstitialAd.load(request: request)  // reuses cached payload
-ad.present(from: nil)
-```
+`preloadAd()` above already *is* the preload — `InterstitialAd.load(request:)` fully loads the ad
+(network fetch + player setup), so holding onto its result and calling `present(from:)` on it
+later, whenever you're ready, is all "preloading" means here. There's no separate pre-fetch step.
 
 ### Rewarded
 
@@ -441,7 +446,7 @@ class MyViewController: UIViewController, RewardedAdDelegate {
     func preloadAd() {
         Task {
             do {
-                let request = RewardedAdRequest(configuration: Configuration(aid: "12345"))
+                let request = AdRequest(configuration: Configuration(aid: "12345"))
                 let ad = try await RewardedAd.load(request: request, reward: Reward(type: "coins", amount: 50))
                 ad.delegate = self
                 self.rewardedAd = ad
@@ -480,7 +485,7 @@ transitions rather than after explicit opt-in. **This SDK does not render an int
 screen** — show your own (reward messaging + a skip option) before calling `present(from:)`:
 
 ```swift
-let request = RewardedInterstitialAdRequest(configuration: Configuration(aid: "12345"))
+let request = AdRequest(configuration: Configuration(aid: "12345"))
 let ad = try await RewardedInterstitialAd.load(request: request, reward: Reward(type: "coins", amount: 50))
 // ... show your own intro screen, then, if the user doesn't skip:
 ad.delegate = self   // RewardedAdDelegate
