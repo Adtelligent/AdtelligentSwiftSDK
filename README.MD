@@ -52,7 +52,7 @@ dependencies: [
 
 ## SDK Version
 
-`AdtelligentSDK.version` reports the linked SDK's release version at runtime (e.g. `"0.3.0"`) —
+`AdtelligentSDK.version` reports the linked SDK's release version at runtime (e.g. `"0.4.0"`) —
 useful for logging or support requests:
 
 ```swift
@@ -60,6 +60,23 @@ import AdtelligentSwiftSDK
 
 print(AdtelligentSDK.version)
 ```
+
+---
+
+## Logging
+
+Enable the SDK's own console logging at runtime, and read back recent log lines for your own
+debug/QA UI:
+
+```swift
+AdtelligentSDK.isLoggingEnabled = true
+
+for entry in AdtelligentSDK.recentLogEntries {
+    print(entry.date, entry.message)
+}
+```
+
+`recentLogEntries` is bounded to the most recent 500 lines captured while logging was enabled.
 
 ---
 
@@ -563,31 +580,6 @@ let clickURL = userInfo?[Event.UserInfoKey.clickURL] as? String
 // present for events that carry a player payload (e.g. videoError)
 let data = userInfo?[Event.UserInfoKey.data] as? String
 ```
-
----
-
-## NotificationCenter
-
-Every delegate callback is also broadcast via `NotificationCenter` on the main thread. This is useful for modules that don't hold a reference to the ad view.
-
-```swift
-NotificationCenter.default.addObserver(
-    forName: .adtelligentCampaignReceived,
-    object: nil,
-    queue: .main
-) { notification in
-    let campaignID = notification.userInfo?[Event.UserInfoKey.campaignID] as? Int64
-}
-```
-
-| Notification.Name | Corresponding Event |
-|---|---|
-| `.adtelligentNoAds` | `.noAds` |
-| `.adtelligentSwipeSlider` | `.swipeSlider` |
-| `.adtelligentCampaignReceived` | `.campaignReceived` |
-| `.adtelligentCampaignUserClick` | `.campaignUserClick` |
-| `.adtelligentSlideClick` | `.slideClick` |
-| `.adtelligentClose` | `.close` |
 
 ---
 
