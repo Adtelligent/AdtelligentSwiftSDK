@@ -14,8 +14,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "AdtelligentSwiftSDK",
-            url: "https://github.com/Adtelligent/AdtelligentSwiftSDK/releases/download/0.4.0/AdtelligentSwiftSDK.xcframework.zip",
-            checksum: "b5647ff4cc70d3b727e97304c13cc0b466bd2884326b5fac1d7062185d0369c4"
+            url: "https://github.com/Adtelligent/AdtelligentSwiftSDK/releases/download/0.5.0/AdtelligentSwiftSDK.xcframework.zip",
+            checksum: "fa3d448e67a2093cf20d44d0a148f3fc0823f73624488b39c153aaf0da9d0d66"
         ),
     ]
 )
