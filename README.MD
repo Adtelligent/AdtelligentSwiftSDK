@@ -6,7 +6,7 @@ Binary iOS SDK for integrating Adtelligent In-App Ads into your application. Sup
 
 ## Requirements
 
-- iOS 14.5+
+- iOS 15+
 - Xcode 16+
 - Swift 5.9+
 
@@ -78,6 +78,12 @@ for entry in AdtelligentSDK.recentLogEntries {
 
 `recentLogEntries` is bounded to the most recent 500 lines captured while logging was enabled.
 
+To debug a creative itself, also set `AdtelligentSDK.isJSLoggingEnabled = true` (it has no effect
+unless `isLoggingEnabled` is on). The SDK log then also gets the ad's own `console` output and one
+`[net]` line per resource the ad loads, with its URL, duration and size. HTTP status is not
+included. On iOS 16.4+, ad views created after the flag is set can also be inspected from
+Safari's Develop menu, which shows full requests and responses.
+
 ---
 
 ## Privacy & Permissions
@@ -125,8 +131,8 @@ AdSize                  — banner size, set once up front (fixed IAB constants,
                            BannerAdController/UIBannerAdView at construction
 
 PlayerOptions           — configures the VAST/outstream video player (audio, close-button delay,
-                           countdown, viewability threshold, etc.) via AdRequest.playerOptions;
-                           ignored for plain banner responses
+                           countdown, viewability threshold, in-place recovery of a failed ad,
+                           etc.) via AdRequest.playerOptions; ignored for plain banner responses
 
 SwiftUI API
     BannerAdController — takes an AdSize; showsCloseButton defaults true, settable afterward;
@@ -208,6 +214,16 @@ let request = AdRequest(
 ```
 
 Pass the request to `BannerAdController.loadAd(request:)` (SwiftUI) or `UIBannerAdView.loadAd(request:)` (UIKit).
+
+If the response is a VAST/outstream video, `playerOptions` configures the player. For example,
+to re-request a replacement in place when an ad fails, instead of ending the unit:
+
+```swift
+let request = AdRequest(
+    configuration: Configuration(aid: "12345"),
+    playerOptions: PlayerOptions(adRecovery: .init(maxRecycles: 3, window: 60))
+)
+```
 
 ---
 
@@ -560,6 +576,8 @@ already covered by the throwing async factory (`try await X.load(request:)`).
 | `.videoFirstQuartile` / `.videoMidpoint` / `.videoThirdQuartile` | Progress milestones |
 | `.videoMute` / `.videoUnmute` | Volume toggle |
 | `.videoClickthrough` | User clicked through the ad |
+| `.adClick` | User tapped through on the ad; the player has already opened the destination |
+| `.adSequenceComplete` | The player's session counters (see UserInfo keys). It can also fire mid-playback, so don't tear anything down on it |
 
 ### UserInfo keys
 
@@ -579,6 +597,11 @@ let clickURL = userInfo?[Event.UserInfoKey.clickURL] as? String
 
 // present for events that carry a player payload (e.g. videoError)
 let data = userInfo?[Event.UserInfoKey.data] as? String
+
+// present for adSequenceComplete
+let opportunities = userInfo?[Event.UserInfoKey.opportunityCount] as? Int
+let impressions   = userInfo?[Event.UserInfoKey.impressionCount]  as? Int
+let errors        = userInfo?[Event.UserInfoKey.errorCount]       as? Int
 ```
 
 ---
