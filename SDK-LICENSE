@@ -1,0 +1,400 @@
+Adtelligent Mobile SDK License Agreement
+
+Version 1.0, October 26, 2026
+
+IMPORTANT — READ CAREFULLY. THESE TERMS APPLY TO THE USE OF THE ADTELLIGENT
+SOFTWARE DEVELOPMENT KIT FOR MOBILE APPLICATIONS (IN OBJECT CODE FORMAT) AND ANY
+ACCOMPANYING TOOLS, DOCUMENTATION AND INSTRUCTIONS (TOGETHER, THE “SDK”),
+PROVIDED BY ADTELLIGENT INC. (“ADTELLIGENT” OR “LICENSOR”). BY DOWNLOADING,
+INTEGRATING OR OTHERWISE USING THE SDK, YOU (“YOU” OR “LICENSEE”) CONFIRM THAT
+YOU HAVE READ THIS SDK LICENSE AGREEMENT (THE “AGREEMENT”), THAT YOU UNDERSTAND
+IT, AND THAT YOU AGREE TO ITS TERMS. IF YOU DO NOT AGREE TO THE TERMS OF THIS
+AGREEMENT, YOU MAY NOT USE THE SDK.
+
+
+1. Purpose
+
+Licensee wishes to develop Application(s) that interact with the Adtelligent
+Services (the “Purpose”). The SDK is provided free of charge so that users can
+access and use the Adtelligent Services from mobile devices, whether or not
+Licensee has a separate agreement with Adtelligent.
+
+
+2. Definitions
+
+“Adtelligent Services” means the platform, systems, software and services
+provided or made available by Adtelligent (including those accessible through
+the SDK or from mobile devices), but excluding the Application(s).
+
+“Adtelligent Terms” means the terms of service for the applicable Adtelligent
+Services published at https://adtelligent.com/tos/, together with any other
+written agreement between Licensee and Adtelligent.
+
+“Application(s)” means the application(s) developed by Licensee using the SDK
+under this Agreement that interact(s) with the Adtelligent Services. For
+clarity, Licensor acknowledges that it does not obtain any ownership interest in
+any Application(s) that Licensee develops using the SDK.
+
+“End User(s)” means the end users who use the Application(s).
+
+
+3. License
+
+3.1 Grant of License. Subject to Your compliance with this Agreement and solely
+for the Purpose, Adtelligent grants You a non-exclusive, non-transferable,
+non-sublicensable, revocable, limited, royalty-free license to: (i) use and
+reproduce the SDK to develop, test and integrate Application(s); and (ii)
+include the SDK, in object code form only, as an embedded and inseparable part
+of the Application(s) and distribute such Application(s) to End Users.
+Adtelligent grants no other license or right except as expressly set out in this
+Agreement.
+
+3.2 Licensee is responsible for compliance with this Agreement by its employees,
+agents and any third-party development vendors who assist Licensee in developing
+the Application(s) and obtain access to the SDK on its behalf.
+
+3.3 Except as permitted by law or expressly permitted by this Agreement,
+Licensee may not, and will not permit any other party to, attempt to sell, rent,
+lend, lease, sublease, assign or otherwise provide, transfer or dispose of the
+SDK, in whole or in part, to any third party, or modify, adapt, distribute
+(other than by including the distributable elements of the SDK in the
+Application(s) developed by Licensee in accordance with this Agreement) or
+create derivative works of the SDK, or reverse engineer, disassemble or
+decompile the binary portions of the SDK, or otherwise attempt to derive source
+code from such portions. Licensee must not use the SDK to send data obtained
+through the SDK to any products or services other than the Adtelligent Services,
+unless Licensor expressly permits it in writing.
+
+3.4 Licensee may not disclose or publish the results of any performance,
+functionality or other evaluation or benchmarking of the SDK to any third party
+without Licensor’s prior written consent.
+
+3.5 This Agreement licenses the SDK only; the Adtelligent Services themselves
+and their use are governed by the Adtelligent Terms.
+
+3.6 The license under this Agreement is free of charge.
+
+
+4. Ownership
+
+Ownership of the SDK and the Adtelligent Services, any intellectual property in
+them, and any trademarks, service marks or trade names of Licensor, as well as
+any goodwill arising from the use of the foregoing, will at all times remain
+with Licensor. Licensee will not represent or claim any ownership interest in
+the SDK or in the Adtelligent Services, or in any intellectual property
+constituting part or all of the SDK or the Adtelligent Services, or in any
+trademarks, service marks or trade names of Licensor. Licensee acknowledges that
+Licensor retains ownership of any distributable components of the SDK that
+Licensee embeds in Licensee’s Application(s). Licensee will not take any action
+that reduces, limits or impairs Licensor’s ownership, its rights to use the SDK,
+the Adtelligent Services, any intellectual property constituting part or all of
+the SDK or the Adtelligent Services, or any trademarks, service marks or trade
+names of Licensor.
+
+
+5. Support
+
+Licensor has no obligation under this Agreement to provide any support or
+technical maintenance for or in relation to the SDK.
+
+
+6. Review of Application(s)
+
+6.1 Licensor may review and verify the functionality and design of the
+Application(s), but is not obliged to do so.
+
+6.2 Regardless of whether Licensor carries out such review and verification, and
+regardless of Licensor’s findings or the absence of findings in such review,
+Licensee remains solely responsible for the proper functionality and all
+features of the Application(s).
+
+
+7. Changes to the SDK
+
+Licensor reserves the right at any time and for any reason to modify, update,
+improve or discontinue the SDK (“Changes”) in Licensor’s sole discretion.
+Licensee acknowledges and agrees that if Licensee does not implement such
+Changes in a timely manner, the Application(s) may become incompatible with the
+Adtelligent Services. Licensor has the right to suspend Licensee’s access to the
+Adtelligent Services, and its use, if Licensee does not implement the Changes in
+a timely manner. After termination of this Agreement, Licensee is not required
+to implement Changes in Application(s) that it continues to distribute under
+Section 14.3, but Licensor is not liable for any incompatibility or loss of
+functionality of such Application(s), and Licensor may suspend access to the
+Adtelligent Services for such Application(s) if they become incompatible or pose
+a risk to the Adtelligent Services.
+
+
+8. Third-Party Software and Open Source Software
+
+8.1 The SDK does not include any third-party or open source software.
+
+8.2 Licensee may not use or link any open source code or other open source
+materials with the SDK in a manner that would cause the SDK (or any part of it)
+to become subject to the terms of an open source license under which subsequent
+recipients or other third parties could claim the right to (i) copy, create
+derivative works of or distribute the SDK (or any part of it), or (ii) receive
+the source code of the SDK (or any part of it). Licensee is liable to Licensor
+for any damages, losses (including loss of profits), costs or expenses resulting
+from Licensee’s breach of this Section.
+
+
+9. Licensee’s Duties and Warranties
+
+9.1 Licensee must comply with all applicable regulatory requirements, including,
+without limitation, all applicable laws, regulations and policies relating to
+the use of the SDK and to the development and distribution of the
+Application(s), including the rules of any platform or app store through which
+they are distributed.
+
+9.2 Licensee is solely responsible (and Licensor has no responsibility to
+Licensee or any third party) for: (i) any data, content or resources that
+Licensee creates, transmits or displays and that are developed by Licensee using
+the SDK; (ii) any deficiencies in the Application(s); (iii) any breach of
+Licensee’s obligations under this Agreement or any applicable third-party
+contract, or any applicable law or regulation; or (iv) any losses or damage that
+Licensor may suffer as a result of any such breach.
+
+9.3 Licensee warrants and represents that Licensee will: (i) carry out any
+development of the Application(s) using appropriately qualified and experienced
+personnel with sufficient resources, professionally and properly, in accordance
+with generally accepted industry standards; and (ii) promptly notify Licensor of
+any security breach or unauthorized access to the Adtelligent Services of which
+it becomes aware.
+
+9.4 Licensee agrees that it will be responsible for all copies of the SDK
+received, made or distributed by Licensee, and for any third-party claims,
+actions or proceedings, and any losses, liabilities, damage, costs and expenses
+incurred by Licensor, directly or indirectly, as a result of unauthorized use of
+the SDK or caused by Licensee’s breach of this Agreement. Subject to Section
+3.1, all copies of the SDK belong to Licensor.
+
+9.5 Licensee must at its best effort comply with all applicable privacy laws for
+the whole period of developing, using and distributing the Application(s) under
+this Agreement, and Licensee must inform End Users of any data collected through
+the Application(s) and the SDK, including by Adtelligent and its advertising
+partners, in Licensee’s privacy policy. Licensee will store and process all user
+data in accordance with Licensee’s privacy policy and all applicable laws and
+regulations in any countries where the Application(s) is distributed or used.
+Before the first ad request is made through the SDK, Licensee will obtain and
+honor all consents and opt-outs required by applicable law, using a compliant
+consent mechanism where required, and will pass to the SDK, in the manner
+described by Licensor, the consent, privacy and age signals that apply to each
+End User. Licensee acknowledges that Adtelligent may collect and use data
+through the SDK to provide, secure, measure and improve the SDK and the
+Adtelligent Services in accordance with Adtelligent’s Privacy Statement
+(https://adtelligent.com/privacy-policy/), applicable law and the Adtelligent
+Terms.
+
+
+10. Confidentiality
+
+Confidential Information includes all information marked “Confidential”,
+“Proprietary” or with a similar designation by the party disclosing the
+information (the “Discloser”) at the time it is provided to the party receiving
+the information (the “Recipient”); and information and data provided by the
+Discloser which, in the circumstances surrounding the disclosure, should
+reasonably be regarded as confidential or proprietary. Without limiting the
+foregoing, the Discloser and the Recipient agree that each Discloser’s input
+regarding the details of consumption of the Adtelligent Services will be deemed
+that Discloser’s Confidential Information. The Recipient will protect
+Confidential Information in the same way it protects its own information of a
+similar nature, but in no event with less than reasonable care. The Recipient
+may not disclose Confidential Information to anyone other than an employee,
+agent, affiliate or third party who needs to know it and who is obligated to
+comply with confidentiality and non-use obligations that protect the
+Confidential Information at least as well as those set out in this Section. The
+Recipient will not use the Discloser’s Confidential Information other than as
+provided in this Agreement. Confidential Information does not include
+information that is publicly available through no fault of the Recipient, was
+lawfully known to the Recipient before disclosure, is independently developed by
+the Recipient without use of Confidential Information, or is lawfully received
+from a third party without restriction.
+
+You agree to keep confidential all information provided by Adtelligent,
+including, without limitation, access credentials, keys, non-public
+documentation and any statistics that are not publicly available, unless
+otherwise approved by Adtelligent. You undertake to protect Adtelligent’s
+Confidential Information in the same way You protect Your own confidential and
+proprietary information, but in no event with a standard of protection lower
+than a reasonable standard of care.
+
+The foregoing obligations will not restrict You from disclosing Adtelligent’s
+Confidential Information pursuant to an order issued by a court of competent
+jurisdiction, provided that You give Adtelligent prior written notice of it
+within a reasonable time so that Adtelligent may contest such order, and, where
+disclosure is necessary, You disclose only that portion of the Confidential
+Information that, in the opinion of Your legal counsel, is required by law.
+
+
+11. Disclaimer of Warranty
+
+THE SDK IS PROVIDED “AS IS” AND “AS AVAILABLE”. TO THE MAXIMUM EXTENT PERMITTED
+BY LAW, ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES,
+INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS
+FOR A PARTICULAR PURPOSE, TITLE OR NON-INFRINGEMENT, ARE DISCLAIMED. ADTELLIGENT
+DOES NOT WARRANT THAT THE SDK WILL BE UNINTERRUPTED, ERROR-FREE OR COMPLETELY
+SECURE, THAT IT WILL BE COMPATIBLE WITH ANY PARTICULAR SOFTWARE OR DEVICE, THAT
+ADVERTISING WILL BE AVAILABLE OR FILLED AT ANY LEVEL, OR THAT USE OF THE SDK
+WILL RESULT IN ANY REVENUE. YOU BEAR THE RISK OF ANY DAMAGE TO ANY COMPUTER
+SYSTEM OR DEVICE, OR LOSS OF DATA, THAT RESULTS FROM USE OF THE SDK. NO ADVICE
+OR INFORMATION, ORAL OR WRITTEN, GIVEN BY ADTELLIGENT CREATES ANY WARRANTY NOT
+EXPRESSLY STATED IN THIS AGREEMENT.
+
+
+12. Indemnification
+
+You hereby agree, at Your own expense and effort, to indemnify, defend and hold
+harmless Adtelligent, its employees, consultants, agents and representatives
+from all losses, damage, claims, alleged claims, suits, actions or
+administrative proceedings arising out of or related to Your use of the SDK
+and/or the Adtelligent Services or access to them, any Application, the acts of
+persons obtaining access to the SDK on Your behalf, or Your breach of this
+Agreement. For the purposes of this Section, the Indemnifying Party is Licensee
+and the Indemnified Party is Adtelligent. Adtelligent does not indemnify
+Licensee under this Agreement; any indemnification by Adtelligent in connection
+with the Adtelligent Services is governed solely by the Adtelligent Terms.
+
+The Indemnified Party must promptly notify the Indemnifying Party in writing
+after becoming aware of any such claims, but failure to give such notice does
+not relieve the Indemnifying Party of its indemnification obligations under this
+Agreement, unless the Indemnifying Party has been materially prejudiced by such
+failure. The Indemnifying Party has sole control over the settlement or defense
+of such claims or actions, except that the Indemnified Party may participate in
+the action at its own expense through counsel reasonably acceptable to the
+Indemnifying Party, only if the parties mutually acknowledge that an actual
+conflict of interest would exist as a result of the Indemnifying Party and the
+Indemnified Party being represented in such action. The Indemnified Party will
+provide reasonable assistance (in a manner consistent with the parties’
+respective obligations regarding confidentiality and the preservation of
+attorney/client privilege, work product and other privileges) to the
+Indemnifying Party in defending against any claim. The Indemnifying Party will
+reimburse the Indemnified Party for any reasonable attorney costs directly
+incurred as a result of providing such assistance. The Indemnifying Party has
+the right to retain all monetary proceeds, attorneys’ fees, court costs and
+other awards that it receives as a result of defending or settling such actions.
+The Indemnifying Party will have the right to consent to the entry of judgment
+in, or the settlement of, the claim it is indemnifying, with the prior written
+consent of the Indemnified Party, provided that such judgment does not
+materially harm or bind the Indemnified Party, in which case the Indemnified
+Party must be consulted before the final resolution of the matter. If the
+Indemnifying Party fails to indemnify and defend such actions in a timely manner
+and/or to pay the Indemnified Party’s costs as provided above, the Indemnified
+Party has the right to defend itself, in which case the Indemnifying Party must
+reimburse the Indemnified Party for all of its reasonable attorneys’ fees, court
+costs and damages incurred in settling or defending such actions within thirty
+(30) days of each written request from the Indemnified Party.
+
+
+13. Limitation of Liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, YOU UNDERSTAND AND AGREE THAT
+ADTELLIGENT WILL NOT BE LIABLE TO YOU FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, CONSEQUENTIAL OR EXEMPLARY DAMAGES, INCLUDING, WITHOUT LIMITATION,
+DAMAGES FOR LOSS OF PROFITS, REPUTATION, USE, DATA OR OTHER INTANGIBLE LOSSES
+(EVEN IF ADTELLIGENT HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES)
+RESULTING FROM: (I) THE USE OF OR INABILITY TO USE THE SDK AND/OR THE
+ADTELLIGENT SERVICES; (II) THE COST OF SUBSTITUTE SERVICES INCURRED AS A RESULT
+OF ANY SERVICES OBTAINED THROUGH OR FROM THE SDK AND/OR THE ADTELLIGENT
+SERVICES; (III) UNAUTHORIZED ACCESS TO OR ALTERATION OF YOUR TRANSMISSIONS OR
+DATA; (IV) STATEMENTS OR CONDUCT OF ANY THIRD PARTIES RELATING TO THE SDK AND/OR
+THE ADTELLIGENT SERVICES; (V) INACCURACY, ERROR OR INCORRECTNESS OF CONTENT;
+(VI) ANY BUGS, VIRUSES, TROJAN HORSES OR THE LIKE THAT MAY BE TRANSMITTED BY A
+THIRD PARTY THROUGH THE SDK AND/OR THE ADTELLIGENT SERVICES; OR (VII) ANY OTHER
+MATTERS RELATING TO THE SDK AND/OR THE ADTELLIGENT SERVICES, WHETHER BASED ON
+WARRANTY, CONTRACT, TORT OR ANY OTHER LEGAL THEORY.
+
+YOU SPECIFICALLY ACKNOWLEDGE AND AGREE THAT NEITHER ADTELLIGENT NOR ANY OF THEIR
+RESPECTIVE DIRECTORS, OFFICERS, EMPLOYEES, CONSULTANTS OR AGENTS WILL BE LIABLE
+FOR ANY DEFAMATORY, OFFENSIVE OR UNLAWFUL CONDUCT OF ANY USER, INCLUDING YOU.
+
+ADTELLIGENT’S AGGREGATE LIABILITY UNDER THIS AGREEMENT WILL IN ANY EVENT NOT
+EXCEED ONE HUNDRED US DOLLARS (US$100). IF FOR ANY REASON THIS LIMITATION OF
+LIABILITY IS CONSIDERED UNLAWFUL OR UNENFORCEABLE, ADTELLIGENT’S LIABILITY IS
+LIMITED TO THE MAXIMUM EXTENT PERMITTED BY LAW. THESE LIMITATIONS DO NOT EXCLUDE
+LIABILITY THAT CANNOT BE EXCLUDED BY LAW.
+
+
+14. Term and Termination
+
+14.1 This Agreement remains in effect for as long as Licensee uses the SDK and
+provides any Application, unless terminated earlier in accordance with these
+terms.
+
+14.2 Adtelligent may terminate this Agreement immediately if: (i) Licensee, or
+any party to whom Licensee gives access to the SDK, materially breaches any
+provision of this Agreement; (ii) the SDK or any Application becomes, or in
+Licensor’s opinion may become, subject to a risk that could affect the operation
+or security of the Adtelligent Services; or (iii) Licensee takes any action that
+infringes Licensor’s rights in the SDK, the Adtelligent Services or any other
+products/services, confidential information or intellectual property rights.
+Adtelligent may also terminate this Agreement at any time on 24 hours’ notice to
+Licensee. Licensee may terminate this Agreement at any time by ceasing use of
+the SDK.
+
+14.3 Upon termination of this Agreement for any reason, Licensee will
+permanently cease development of any new Applications or any update to the
+existing Applications with the use of the SDK. Licensee may continue to maintain
+and distribute the Applications developed with the incorporated SDK that were
+released before the termination date, subject to the terms of this Agreement,
+including all the restrictions and obligations.
+
+14.4 Sections 3.3, 3.4, 4, 8.2, 9.2, 9.4, 9.5, 10, 11, 12, 13, 14.3, 15 and 16
+survive any termination or expiry of this Agreement.
+
+
+15. Governing Law
+
+This Agreement, all documents incorporated into it by reference, and any
+disputes that may arise between You and Adtelligent are governed by and
+construed in accordance with the laws of the State of Delaware, without regard
+to its conflict-of-laws principles and, in particular, excluding from
+application to this Agreement the law known as the United Nations Convention on
+Contracts for the International Sale of Goods.
+
+All disputes relating to this Agreement and all documents incorporated into it
+by reference will be heard exclusively in the federal or state courts located in
+the State of Delaware, USA.
+
+If You are a federal, state or local government authority in the United States
+that uses the SDK and/or the Adtelligent Services in an official capacity and is
+legally unable to accept the governing law, jurisdiction or venue provisions set
+out above, then those provisions do not apply to You. For such U.S. federal
+government agencies, this Agreement and any related actions will be governed by
+the laws of the United States of America (without reference to conflict-of-laws
+principles) and, in the absence of federal law and to the extent permitted by
+federal law, by the laws of the State of Delaware (excluding choice of law).
+
+You agree that, notwithstanding any statute or law to the contrary, any claim or
+cause of action relating to the SDK or this Agreement must be filed within one
+(1) year after the claim or cause of action arose.
+
+A printed version of this Agreement and of any notice given in electronic form
+will be admissible in judicial or administrative proceedings based upon or
+relating to this Agreement to the same extent and under the same conditions as
+other business documents and records originally generated and maintained in
+printed form.
+
+
+16. General
+
+16.1 The SDK may be subject to United States and other export control and
+sanctions laws. Licensee will comply with them and represents that it is not
+located in a country or region subject to comprehensive U.S. sanctions and is
+not on any U.S. restricted-party list.
+
+16.2 If a court finds any provision of this Agreement unenforceable, the
+remaining provisions remain in force. A waiver is effective only if in writing
+and signed by the waiving party.
+
+16.3 This Agreement is the parties’ entire agreement on the license to use the
+SDK. The Adtelligent Terms separately govern the Adtelligent Services and are
+not replaced by this Agreement. If a written agreement signed by Licensee and
+Adtelligent expressly addresses use of the SDK and conflicts with this
+Agreement, the signed agreement prevails to the extent of the conflict.
+
+16.4 Licensor may update this Agreement for future versions of the SDK,
+indicating the version and effective date at the top. By continuing to use the
+SDK, including by integrating or distributing a later version, Licensee accepts
+the updated Agreement. Any other amendment must be in writing and signed by both
+parties.
