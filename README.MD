@@ -79,7 +79,8 @@ for entry in AdtelligentSDK.recentLogEntries {
 `recentLogEntries` is bounded to the most recent 500 lines captured while logging was enabled.
 
 To debug a creative itself, also set `AdtelligentSDK.isJSLoggingEnabled = true` (it has no effect
-unless `isLoggingEnabled` is on). The SDK log then also gets the ad's own `console` output and one
+unless `isLoggingEnabled` is on). The SDK log then also gets the ad's own `console` output, its uncaught
+JS errors (`[uncaught]`) and one
 `[net]` line per resource the ad loads, with its URL, duration and size. HTTP status is not
 included. On iOS 16.4+, ad views created after the flag is set can also be inspected from
 Safari's Develop menu, which shows full requests and responses.
@@ -561,6 +562,7 @@ already covered by the throwing async factory (`try await X.load(request:)`).
 | `.swipeSlider` | User swiped to a different slide in a carousel ad |
 | `.slideClick` | User tapped a slide in a carousel ad; URL opened automatically |
 | `.close` | Ad requested dismissal; the containing view is removed automatically |
+| `.adClick` | The creative opened a URL through `mraid.open`; URL opened automatically |
 
 ### Video events
 
@@ -603,6 +605,32 @@ let opportunities = userInfo?[Event.UserInfoKey.opportunityCount] as? Int
 let impressions   = userInfo?[Event.UserInfoKey.impressionCount]  as? Int
 let errors        = userInfo?[Event.UserInfoKey.errorCount]       as? Int
 ```
+
+---
+
+## MRAID and Viewability
+
+Every ad the SDK renders in a WebView (banners, and HTML creatives in full-screen formats) runs inside an MRAID 3.0
+container. There is nothing to configure.
+
+- **Viewability is measured natively.** JavaScript inside a WebView cannot see where the WebView sits on the app's
+  screen, so the SDK measures the visible share of the ad view itself — clipping by scroll views and parent views,
+  the screen edges, and the app going to the background — and pushes every change to the creative as `exposureChange`.
+  A banner below the fold counts as not viewable until it is scrolled into view.
+- **Clicks.** `mraid.open(url)` opens the URL outside the app and is reported as `.adClick`. A tap that reaches the
+  SDK through more than one channel opens the URL once.
+- **Close.** `mraid.close()` is reported as `.close`: a banner is removed, a full-screen ad is dismissed.
+- **Placement type** is `inline` for banners and `interstitial` for full-screen formats.
+- **Not supported:** `expand`, `resize`, `storePicture` and `createCalendarEvent` fire an MRAID `error` event.
+  `supports()` returns `true` for `tel` and `inlineVideo` only.
+- **`window.MRAID_ENV`** carries `version`, `sdk` (`"AdtelligentSwiftSDK"`), `sdkVersion` and `appId` (the app's
+  bundle identifier).
+
+Limitations:
+
+- Other opaque views covering the ad (sheets, app overlays) are not detected; the ad still counts as visible.
+- A cross-origin iframe inside the creative gets no `mraid` object.
+- This is the SDK's own measurement. It is not MRC-accredited and is not the IAB Open Measurement SDK.
 
 ---
 
