@@ -79,7 +79,8 @@ for entry in AdtelligentSDK.recentLogEntries {
 `recentLogEntries` is bounded to the most recent 500 lines captured while logging was enabled.
 
 To debug a creative itself, also set `AdtelligentSDK.isJSLoggingEnabled = true` (it has no effect
-unless `isLoggingEnabled` is on). The SDK log then also gets the ad's own `console` output and one
+unless `isLoggingEnabled` is on). The SDK log then also gets the ad's own `console` output, its uncaught
+JS errors (`[uncaught]`) and one
 `[net]` line per resource the ad loads, with its URL, duration and size. HTTP status is not
 included. On iOS 16.4+, ad views created after the flag is set can also be inspected from
 Safari's Develop menu, which shows full requests and responses.
