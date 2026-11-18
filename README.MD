@@ -675,5 +675,6 @@ let request = AdRequest(
 The files in this repository (`Package.swift`, documentation) are licensed under the
 [Apache License 2.0](LICENSE). The AdtelligentSwiftSDK binary framework, including the
 `.xcframework` attached to this repository's releases, is not covered by that license. It is
-Copyright © 2026 Adtelligent Inc. and may be used only under the terms of your agreement with
-Adtelligent Inc.
+Copyright © 2026 Adtelligent Inc. and is licensed under the
+[Adtelligent Mobile SDK License Agreement](SDK-LICENSE), which also ships as `LICENSE` inside
+the release zip.
