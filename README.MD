@@ -647,7 +647,6 @@ Limitations:
 
 - Other opaque views covering the ad (sheets, app overlays) are not detected; the ad still counts as visible.
 - A cross-origin iframe inside the creative gets no `mraid` object.
-- This is the SDK's own measurement. It is not MRC-accredited and is not the IAB Open Measurement SDK.
 
 ---
 
