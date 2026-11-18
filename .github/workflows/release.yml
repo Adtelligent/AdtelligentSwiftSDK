@@ -9,7 +9,7 @@ on:
 jobs:
   release:
     if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
-    runs-on: macos-14
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
