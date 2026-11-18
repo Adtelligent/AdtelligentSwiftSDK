@@ -12,9 +12,9 @@ Binary iOS SDK for integrating Adtelligent In-App Ads into your application. Sup
 
 ---
 
-## Installation (Swift Package Manager)
+## Installation
 
-### Option 1 — Xcode UI
+### Swift Package Manager — Xcode UI
 
 1. Open your project in Xcode.
 2. Go to **File → Add Packages...**
@@ -28,13 +28,13 @@ https://github.com/Adtelligent/AdtelligentSwiftSDK
 5. Select the latest available version.
 6. Add the package to your app target.
 
-### Option 2 — Package.swift
+### Swift Package Manager — Package.swift
 
 ```swift
 dependencies: [
     .package(
         url: "https://github.com/Adtelligent/AdtelligentSwiftSDK",
-        from: "1.0.0"
+        from: "0.6.0"
     )
 ]
 ```
@@ -47,6 +47,19 @@ dependencies: [
     ]
 )
 ```
+
+### CocoaPods
+
+```ruby
+platform :ios, '15.0'
+use_frameworks!
+
+target 'YourApp' do
+  pod 'AdtelligentSwiftSDK', '~> 0.6'
+end
+```
+
+Then run `pod install` (or `pod repo update` first if the latest version isn't found).
 
 ---
 
@@ -411,7 +424,9 @@ bannerView.showsCloseButton = false
 ## Full-Screen Ads
 
 Three formats share the same load-then-`present(from:)` pattern and delegate protocols. The ad
-dismisses itself automatically on `Event.close`.
+dismisses itself automatically on `Event.close`. Full-screen ads always show the SDK's close button
+in the top-right corner, and it responds across the 50×50 pt area MRAID reserves for it; it cannot
+be hidden, so a broken creative can never trap the user.
 
 | Type | Reward? | Presented when |
 |---|---|---|
@@ -619,7 +634,9 @@ container. There is nothing to configure.
   A banner below the fold counts as not viewable until it is scrolled into view.
 - **Clicks.** `mraid.open(url)` opens the URL outside the app and is reported as `.adClick`. A tap that reaches the
   SDK through more than one channel opens the URL once.
-- **Close.** `mraid.close()` is reported as `.close`: a banner is removed, a full-screen ad is dismissed.
+- **Close.** `mraid.close()` is reported as `.close`: a banner is removed, a full-screen ad is dismissed. A
+  full-screen creative needs no close button of its own (the SDK draws one) and should keep its top-right
+  50×50 pt free.
 - **Placement type** is `inline` for banners and `interstitial` for full-screen formats.
 - **Not supported:** `expand`, `resize`, `storePicture` and `createCalendarEvent` fire an MRAID `error` event.
   `supports()` returns `true` for `tel` and `inlineVideo` only.
