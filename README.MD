@@ -34,7 +34,7 @@ https://github.com/Adtelligent/AdtelligentSwiftSDK
 dependencies: [
     .package(
         url: "https://github.com/Adtelligent/AdtelligentSwiftSDK",
-        from: "0.6.0"
+        from: "0.6.1"
     )
 ]
 ```
@@ -630,8 +630,11 @@ container. There is nothing to configure.
 
 - **Viewability is measured natively.** JavaScript inside a WebView cannot see where the WebView sits on the app's
   screen, so the SDK measures the visible share of the ad view itself — clipping by scroll views and parent views,
-  the screen edges, and the app going to the background — and pushes every change to the creative as `exposureChange`.
-  A banner below the fold counts as not viewable until it is scrolled into view.
+  the screen edges, the app going to the background, and anything the app draws over the ad (views, SwiftUI
+  overlays, sheets, alerts) — and pushes every change to the creative as `exposureChange`. A banner below the fold
+  counts as not viewable until it is scrolled into view; covered parts come off `exposedPercentage` and are passed
+  as `occlusionRectangles`. A view or layer that draws anything covers its whole rectangle, so a semi-transparent
+  overlay counts as covering.
 - **Clicks.** `mraid.open(url)` opens the URL outside the app and is reported as `.adClick`. A tap that reaches the
   SDK through more than one channel opens the URL once.
 - **Close.** `mraid.close()` is reported as `.close`: a banner is removed, a full-screen ad is dismissed. A
